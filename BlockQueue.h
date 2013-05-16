@@ -35,7 +35,7 @@ public:
 
         while (_queue.empty ())
         {
-            if (0 != pthread_cond_timedwait (&_cond, &_mutex, &t))
+            if (pthread_cond_timedwait (&_cond, &_mutex, &t) != 0)
             {
                 //timeout
                 pthread_mutex_unlock (&_mutex);
