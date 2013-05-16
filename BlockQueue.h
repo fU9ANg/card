@@ -14,48 +14,55 @@ public:
 
     BlockQueue ()
     {
-        pthread_mutex_init (&m_mutex, NULL);
-        pthread_cond_init (&m_con, NULL);
+        pthread_mutex_init (&_mutex, NULL);
+        pthread_cond_init  (&_cond , NULL);
     }
 
     ~BlockQueue ()
     {
-        pthread_mutex_destroy (&m_mutex);
-        pthread_cond_destroy (&m_con);
+        pthread_mutex_destroy (&_mutex);
+        pthread_cond_destroy  (&_cond);
     }
 
     int dequeue (TYPE& out, unsigned int timeout)
     {
         struct timespec t;
+
+        pthread_mutex_lock (&_mutex);
+
         t.tv_sec = time (NULL) + timeout;
         t.tv_nsec = 0;
-        pthread_mutex_lock (&m_mutex);
-        while (m_queue.empty ()) {
-            if (0 != pthread_cond_timedwait (&m_con, &m_mutex, &t)) {
+
+        while (_queue.empty ())
+        {
+            if (0 != pthread_cond_timedwait (&_cond, &_mutex, &t))
+            {
                 //timeout
-                pthread_mutex_unlock (&m_mutex);
+                pthread_mutex_unlock (&_mutex);
                 return (-1);
             } 
         }
-        out = m_queue.front ();
-        m_queue.pop ();
-        pthread_mutex_unlock (&m_mutex);
+        out = _queue.front ();
+        _queue.pop ();
+        pthread_mutex_unlock (&_mutex);
+
         return (0);
     }
 
     int enqueue (TYPE t)
     {
-        pthread_mutex_lock (&m_mutex);
-        if (m_queue.empty ())
+        pthread_mutex_lock (&_mutex);
+
+        if (_queue.empty ())
         {
-            m_queue.push (t);
-            pthread_mutex_unlock (&m_mutex);
-            pthread_cond_signal (&m_con);
+            _queue.push (t);
+            pthread_mutex_unlock (&_mutex);
+            pthread_cond_signal (&_cond);
         }
         else
         {
-            m_queue.push (t);
-            pthread_mutex_unlock (&m_mutex);
+            _queue.push (t);
+            pthread_mutex_unlock (&_mutex);
         }
 
         return (0);
@@ -63,16 +70,16 @@ public:
 
     size_t size ()
     {
-        pthread_mutex_lock (&m_mutex);
-        size_t size = m_queue.size ();
-        pthread_mutex_unlock (&m_mutex);
+        pthread_mutex_lock (&_mutex);
+        size_t size = _queue.size ();
+        pthread_mutex_unlock (&_mutex);
         return (size);
     }
 
 private:
-    pthread_mutex_t m_mutex;
-    pthread_cond_t  m_con;
-    queue <TYPE>    m_queue;
+    pthread_mutex_t _mutex;
+    pthread_cond_t  _cond;
+    queue <TYPE>    _queue;
 };
 
 #endif

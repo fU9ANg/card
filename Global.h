@@ -16,7 +16,7 @@ class Single
         static class Single* instance();
         BlockQueue<Buffer*> recvqueue;
         BlockQueue<Buffer*> sendqueue;
-        PoolT    <Buffer> bufpool;
+        MemZone   <Buffer > bufpool;
 
     private:
         Single();
