@@ -1,5 +1,5 @@
 
-# cmake file for compile card server
+# Cmake file for compile card server
 
 cmake_minimum_required (VERSION 2.8)
 project (card)
@@ -30,7 +30,7 @@ INCLUDE_DIRECTORIES (
 
 # source code list
 SET (SRC_LIST
-    Main.cc
+    Card.cc
     Config.cc
 	RecvTask.cc
    	SendTask.cc
