@@ -13,7 +13,8 @@ public:
     {
         m_size  = inSize;
         m_ptr   = malloc (m_size);
-        m_curr_ptr = m_ptr;
+        m_in_ptr = m_ptr;
+        m_out_ptr = m_ptr;
         m_fd    = 0;
         m_id    = 0;
     };
@@ -24,7 +25,8 @@ public:
         {
             free (m_ptr);
             m_ptr = NULL;
-            m_curr_ptr = NULL;
+            m_in_ptr = NULL;
+            m_out_ptr = NULL;
         }
     }
 
@@ -32,7 +34,8 @@ public:
     {
         m_size = b.m_size;
         this->m_ptr = malloc (m_size);
-        this->m_curr_ptr = this->m_ptr;
+        this->m_in_ptr = this->m_ptr;
+        this->m_out_ptr = this->m_ptr;
         memcpy (this->m_ptr, b.m_ptr, m_size);
     };
 
@@ -41,9 +44,14 @@ public:
         return (m_ptr);
     }
 
-    void* current_ptr()
+    void* input_ptr()
     {
-        return (m_curr_ptr);
+        return (m_in_ptr);
+    }
+
+    void* output_ptr()
+    {
+        return (m_out_ptr);
     }
 
     size_t setsize (size_t in)
@@ -64,7 +72,8 @@ public:
     void reset ()
     {
         memset (m_ptr, 0x00, m_size);
-        m_curr_ptr = m_ptr;
+        m_in_ptr = m_ptr;
+        m_out_ptr = m_ptr;
     }
 
     int getfd ()
@@ -94,16 +103,30 @@ public:
     }
 
     // operators
-#if 0
-    void operator<< (TYPE t)
+    template <typename TYPE>
+    void operator<< (TYPE& pt)
     {
-        (void) memcpy ((char*) m_curr_ptr, (char*) t, sizeof (TYPE));
-        m_curr_ptr += sizeof (TYPE);
+        if (m_in_ptr)
+        {
+            (void) memcpy ((char*) m_in_ptr, (char*) &pt, sizeof (TYPE));
+            m_in_ptr = (char*) m_in_ptr + sizeof (TYPE);
+        }
     }
-#endif
+
+    template <typename TYPE>
+    void operator>> (TYPE& pt)
+    {
+        if (m_out_ptr)
+        {
+            (void) memcpy ((char*) &pt, (char*) m_out_ptr, sizeof (TYPE));
+            m_out_ptr = (char*) m_out_ptr + sizeof (TYPE);
+        }
+    }
+
 private:
     void*   m_ptr;
-    void*   m_curr_ptr;
+    void*   m_in_ptr;
+    void*   m_out_ptr;
     size_t  m_size;
     size_t  m_used;
     int     m_fd;
