@@ -24,10 +24,11 @@ CMACRO	=
 #-D_OLD_MAKEHOUSE_GAME
 
 # objects
-OBJS    = test_Buffer.o
+OBJBUFF = test_Buffer.o
+OBJMEMZ = test_MemZone.o
 
 # binary
-BIN	    = test_Buffer 
+BIN	    = test_Buffer test_MemZone
 
 # where are include files kept
 INC	    = -I. -I.. -I../includes -I../handler -I../auth -I../game -I../world -I../login -I../register -I../shared -I../update
@@ -39,8 +40,12 @@ LINK    = -lev -lglog -lmysqlcppconn -llua5.2
 all: clean $(BIN)
 
 # how to compiling programs
-$(BIN):$(OBJS)
-	$(CPP) $(CFLAGS) $(CDEBUG) $(BHFLAGS) $(CMACRO) -o $@ $(OBJS) $(LINK)
+test_Buffer:$(OBJBUFF)
+	$(CPP) $(CFLAGS) $(CDEBUG) $(BHFLAGS) $(CMACRO) -o $@ $(OBJBUFF) $(LINK)
+
+test_MemZone:$(OBJMEMZ)
+	$(CPP) $(CFLAGS) $(CDEBUG) $(BHFLAGS) $(CMACRO) -o $@ $(OBJMEMZ) $(LINK)
+
 %.o:%.cc
 	$(CPP) $(CFLAGS) $(CDEBUG) $(BHFLAGS) $(CMACRO) $(INC) -o $@ -c $<
 %.o:%.c
@@ -49,4 +54,4 @@ $(BIN):$(OBJS)
 .PHONY: clean
 
 clean:
-	-rm -rf $(OBJS) $(BIN) *~ logs .lock
+	-rm -rf $(OBJBUFF) $(OBJMEMZ) $(BIN) *~ logs .lock
