@@ -104,7 +104,7 @@ int manager::run ()
     printf ("server running...\n");
 
     m_thrpool->start ();
-    Evloop* evloop = new Evloop (CONFIG->server_ip.c_str(), CONFIG->server_port);
+    EventLoop* evloop = new EventLoop (CONFIG->server_ip.c_str(), CONFIG->server_port);
     printf ("server ip = [%s], port = [%d]\n", CONFIG->server_ip.c_str (), CONFIG->server_port);
     RecvTask* precv = new RecvTask ();
     SendTask* psend = new SendTask ();

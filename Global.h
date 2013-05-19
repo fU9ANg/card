@@ -9,20 +9,20 @@
 #include "MemZone.h"
 #include "Buffer.h"
 
-class Single 
+class Global 
 {
     public:
-        ~Single();
-        static class Single* instance();
+        ~Global();
+        static class Global* instance();
         BlockQueue<Buffer*> recvqueue;
         BlockQueue<Buffer*> sendqueue;
         MemZone   <Buffer > bufpool;
 
     private:
-        Single();
-        static class Single* p_;
+        Global();
+        static class Global* p_;
 };
 
-#define SINGLE Single::instance()
+#define GLOBAL Global::instance()
 
 #endif

@@ -10,12 +10,12 @@ class BufferSafe
     public:
         explicit BufferSafe (Buffer* _buf)
         {
-            _buf = SINGLE->bufpool.malloc ();
+            _buf = GLOBAL->bufpool.malloc ();
         }
         
         ~BufferSafe ()
         {
-            SINGLE->bufpool.free (_buffer);
+            GLOBAL->bufpool.free (_buffer);
         }
         
     private:

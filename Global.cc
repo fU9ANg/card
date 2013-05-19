@@ -1,23 +1,23 @@
 //
-// Singleton
+// singleton
 //
 
 #include "Global.h"
 
-Single* Single::p_ = NULL;
-Single* Single::instance() 
+Global* Global::p_ = NULL;
+Global* Global::instance() 
 {
     if (p_ == NULL)
     {
-        p_ = new Single(); 
+        p_ = new Global(); 
     }
     return p_;
 }
 
-Single::Single()
+Global::Global()
 {
 }
     
-Single::~Single()
+Global::~Global()
 {
 }

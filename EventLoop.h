@@ -23,11 +23,11 @@ typedef struct ev_io_info
 
 }   ev_in_info;
 
-class Evloop: public Task
+class EventLoop: public Task
 {
     public:
-        Evloop (string ip, int port);
-        ~Evloop ();
+        EventLoop (string ip, int port);
+        ~EventLoop ();
         virtual int work ();
 
         static void accept_cb (struct ev_loop *loop, ev_io *w, int revents);

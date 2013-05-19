@@ -6,7 +6,7 @@ int SendTask::work ()
     while (true)
     {
         Buffer* p = NULL;
-        if (SINGLE->sendqueue.dequeue (p, 3) != 0)
+        if (GLOBAL->sendqueue.dequeue (p, 3) != 0)
         {
             continue;
         }
@@ -16,7 +16,7 @@ int SendTask::work ()
         if (0 == fd)
         {
             cout << "[SEND] -- fd of Buffer == 0" << endl;
-            SINGLE->bufpool.free (p);
+            GLOBAL->bufpool.free (p);
             continue;
         }
 
@@ -72,7 +72,7 @@ int SendTask::work ()
         LOG(INFO) << "Send data ... finished. packet len=" << p->size() << ", from FD=" << fd << endl;
 
         p->reset ();
-        SINGLE->bufpool.free (p);
+        GLOBAL->bufpool.free (p);
     }
     return (0);
 }

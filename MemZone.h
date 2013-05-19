@@ -5,7 +5,7 @@
 #include "Define.h"
 #include "MutexLock.h"
 
-#define MAX_POOL_BUF    20000
+#define MAX_POOL_BUF    200
 
 using namespace std;
 

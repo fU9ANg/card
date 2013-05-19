@@ -15,7 +15,7 @@ int RecvTask::work ()
     while (true)
     {
         Buffer* p = NULL;
-        if (SINGLE->recvqueue.dequeue (p, 3) != 0)
+        if (GLOBAL->recvqueue.dequeue (p, 3) != 0)
         {
             continue;
         }

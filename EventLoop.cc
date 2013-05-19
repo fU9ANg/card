@@ -1,11 +1,11 @@
 
 #include "EventLoop.h"
 
-struct ev_loop* Evloop::loop = NULL;
-struct ev_io_info Evloop::ioarray [MAXFD];
-Atomic <int> Evloop::clientcount;
+struct ev_loop* EventLoop::loop = NULL;
+struct ev_io_info EventLoop::ioarray [MAXFD];
+Atomic <int> EventLoop::clientcount;
 
-Evloop::Evloop (string ip, int port)
+EventLoop::EventLoop (string ip, int port)
 {
     m_ip = ip;
     m_port = port;
@@ -19,12 +19,12 @@ Evloop::Evloop (string ip, int port)
     }
 }
 
-Evloop::~Evloop ()
+EventLoop::~EventLoop ()
 {
     close (m_listenfd);
 }
 
-int Evloop::startlisten ()
+int EventLoop::startlisten ()
 {
     struct sockaddr_in servaddr;
     servaddr.sin_family = AF_INET;
@@ -43,7 +43,7 @@ int Evloop::startlisten ()
     return (m_listenfd);
 }
 
-int Evloop::work ()
+int EventLoop::work ()
 {
     startlisten ();
     ev_io *ev_io_watcher = (ev_io*) malloc (sizeof (ev_io));
@@ -51,26 +51,26 @@ int Evloop::work ()
     //ev_io ev_io_watcher;
     //ev_timer timer;
 #endif
-    Evloop::loop = ev_loop_new (EVBACKEND_EPOLL);
+    EventLoop::loop = ev_loop_new (EVBACKEND_EPOLL);
 
     ev_io_init (ev_io_watcher, accept_cb, m_listenfd, EV_READ);
 
-    ev_io_start (Evloop::loop, ev_io_watcher); 
+    ev_io_start (EventLoop::loop, ev_io_watcher); 
 #if 0
     //定时器
     ev_timer_init (&timer, time_cb, 5, 5);
-    ev_timer_start (Evloop::loop,&timer); 
+    ev_timer_start (EventLoop::loop,&timer); 
 #endif
     LOG (INFO) << "libevent loop";
 
-    ev_loop (Evloop::loop, 0);
+    ev_loop (EventLoop::loop, 0);
 
-    ev_loop_destroy (Evloop::loop);
+    ev_loop_destroy (EventLoop::loop);
     free (ev_io_watcher);
     return (0);
 }
 
-void Evloop::accept_cb (struct ev_loop *loop, ev_io *w, int revents)
+void EventLoop::accept_cb (struct ev_loop *loop, ev_io *w, int revents)
 {
     struct sockaddr_in clientaddr;
     socklen_t socklen = sizeof (struct sockaddr_in);
@@ -89,21 +89,21 @@ void Evloop::accept_cb (struct ev_loop *loop, ev_io *w, int revents)
         <<"] ip = ["<<inet_ntoa (clientaddr.sin_addr)
         <<"] port = [" << htons (clientaddr.sin_port) <<"]"<<endl;
 
-    Evloop::setnonblock (newfd);
+    EventLoop::setnonblock (newfd);
 
-    Evloop::ioarray[newfd].io = (ev_io*)malloc (sizeof (ev_io));
-    Evloop::ioarray[newfd].lasttime = ev_time ();
+    EventLoop::ioarray[newfd].io = (ev_io*)malloc (sizeof (ev_io));
+    EventLoop::ioarray[newfd].lasttime = ev_time ();
 
-    ev_io_init (Evloop::ioarray[newfd].io, recv_cb, newfd, EV_READ);
-    ev_io_start (loop, Evloop::ioarray[newfd].io);
-    Evloop::clientcount++;
+    ev_io_init (EventLoop::ioarray[newfd].io, recv_cb, newfd, EV_READ);
+    ev_io_start (loop, EventLoop::ioarray[newfd].io);
+    EventLoop::clientcount++;
 
     return;
 }
 
-void Evloop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
+void EventLoop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
 {
-    Buffer* buf = SINGLE->bufpool.malloc ();
+    Buffer* buf = GLOBAL->bufpool.malloc ();
     if (buf == NULL)
     {
         sleep  (1);
@@ -118,8 +118,8 @@ void Evloop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
     {
         LOG (ERROR) << w->fd <<":recv head error! actually received len = "<< i 
             <<" info = "<< strerror (errno)<<endl;
-        SINGLE->bufpool.free (buf);
-        Evloop::closefd (w->fd);
+        GLOBAL->bufpool.free (buf);
+        EventLoop::closefd (w->fd);
         return;
     }
 
@@ -131,36 +131,36 @@ void Evloop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
     {
         LOG (ERROR) << w->fd <<":recv body error! hope = "<< *p <<" actually received len = "<< i 
             <<" info = "<< strerror (errno) <<endl;
-        SINGLE->bufpool.free (buf);
-        Evloop::closefd (w->fd);
+        GLOBAL->bufpool.free (buf);
+        EventLoop::closefd (w->fd);
         return;
     }
 
-    Evloop::ioarray[w->fd].lasttime = ev_time ();
+    EventLoop::ioarray[w->fd].lasttime = ev_time ();
     buf->setfd (w->fd);
     //将buf压入队列
-    SINGLE->recvqueue.enqueue (buf);
+    GLOBAL->recvqueue.enqueue (buf);
     return;
 }
 
-void Evloop::setnonblock (int fd)
+void EventLoop::setnonblock (int fd)
 {
     fcntl (fd, F_SETFL, fcntl (fd, F_GETFL, 0) | O_NONBLOCK);
 }
 
-void Evloop::setreuseaddr (int fd)
+void EventLoop::setreuseaddr (int fd)
 {
     int reuse = 1;
     setsockopt (fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof (reuse));
 }
 
-void Evloop::setnodelay (int fd)
+void EventLoop::setnodelay (int fd)
 {
     int nodelay = 1;
     setsockopt (fd, IPPROTO_TCP, TCP_NODELAY, &nodelay, sizeof (nodelay));
 }
 
-void Evloop::closefd (int fd)
+void EventLoop::closefd (int fd)
 {
     struct sockaddr_in remote_addr;
     socklen_t socklen = sizeof (struct sockaddr_in);
@@ -176,14 +176,14 @@ void Evloop::closefd (int fd)
         <<"] port = [" << htons (remote_addr.sin_port) <<"]"<<endl;
 
     close (fd);
-    ev_io_stop (loop, Evloop::ioarray[fd].io);
-    free (Evloop::ioarray[fd].io);
-    Evloop::ioarray[fd].io = NULL;
-    Evloop::clientcount--;
+    ev_io_stop (loop, EventLoop::ioarray[fd].io);
+    free (EventLoop::ioarray[fd].io);
+    EventLoop::ioarray[fd].io = NULL;
+    EventLoop::clientcount--;
     //ROOMMANAGER->del_client (fd);
 }
 
-void Evloop::time_cb (struct ev_loop* loop, struct ev_timer *timer, int revents)
+void EventLoop::time_cb (struct ev_loop* loop, struct ev_timer *timer, int revents)
 {
     ev_tstamp now = ev_time ();
     for (register int i = 0; i < MAXFD; ++i)
@@ -194,14 +194,14 @@ void Evloop::time_cb (struct ev_loop* loop, struct ev_timer *timer, int revents)
             if (TIMEOUT < now - ioarray[i].lasttime)
             {
                 LOG (INFO) << i << " now: "<< now << " last recv data:" << ioarray[i].lasttime ;
-                //Evloop::closefd (i);
+                //EventLoop::closefd (i);
             }
         }
     }
     return;
 }
 
-int Evloop::getClientCount ()
+int EventLoop::getClientCount ()
 {
-    return (Evloop::clientcount.value ());
+    return (EventLoop::clientcount.value ());
 }

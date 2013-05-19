@@ -35,7 +35,7 @@ bool CHandleMessage::postMessage (Buffer* p, enum CommandType iCommandType, void
     }
 
     p->setsize (head->cLen);
-    SINGLE->sendqueue.enqueue (p);
+    GLOBAL->sendqueue.enqueue (p);
 
     return true;
 }
@@ -43,6 +43,6 @@ bool CHandleMessage::postMessage (Buffer* p, enum CommandType iCommandType, void
 void CHandleMessage::postTest (void)
 {
     BUFFER (p);
-    SINGLE->bufpool.free (p);
+    GLOBAL->bufpool.free (p);
     p->setsize (10);
 }
