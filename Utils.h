@@ -13,6 +13,18 @@
 extern "C"{
 #endif
 
+#define error_exit(result, fmt, args ...) \
+    do { \
+        printf ("[%s:%d] - "fmt"\n", __FILE__, __LINE__, ##args); \
+        exit (result); \
+    } while (0)
+
+#define error_return(result, fmt, args ...) \
+    do { \
+        printf ("[%s:%d] - "fmt"\n", __FILE__, __LINE__, ##args); \
+        return (result); \
+    } while (0)
+
 extern ssize_t send_n (int fd, void* buf, ssize_t left, struct timeval* timeout);
 extern int     send_v (int fd, void* buf, ssize_t left);
 
