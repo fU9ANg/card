@@ -88,7 +88,9 @@ CREATE TABLE `character` (
     `xxx` int(11) NOT NULL, # 结果6
 
     `xxx` int(11) NOT NULL, # 身价
+    `xxx` int(11) NOT NULL, # 身价成长
     `xxx` int(11) NOT NULL, # 天赋武功
+    `xxx` int(11) NOT NULL, # 弟子经验成长值
     `xxx` int(11) NOT NULL, # 升级后需要的魂魄数量
     `xxx` int(11) NOT NULL, # 人物详细描述
 
@@ -103,6 +105,7 @@ DROP TABLE IF EXISTS `equipment`;
 CREATE TABLE `equipment` (
     `xxx` int(11) NOT NULL, # 记录ID
     `xxx` int(11) NOT NULL, # 装备ID
+    `xxx` int(11) NOT NULL, # 装备类型ID
     `xxx` int(11) NOT NULL, # 装备名称
     `xxx` int(11) NOT NULL, # 品质ID
     `xxx` int(11) NOT NULL, # 原始等级
@@ -115,6 +118,7 @@ CREATE TABLE `equipment` (
     `xxx` int(11) NOT NULL, # 血成长值
     `xxx` int(11) NOT NULL, # 内成长值
     `xxx` int(11) NOT NULL, # 身价
+    `xxx` int(11) NOT NULL, # 身价成长值
     `xxx` int(11) NOT NULL, # 简介
     PRIMARY KEY (`xxx`)
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -143,6 +147,7 @@ CREATE TABLE `xxxtable` (
     `xxx` int(11) NOT NULL, # 群体伤害强度
     `xxx` int(11) NOT NULL, # 群体伤害成长值
     `xxx` int(11) NOT NULL, # 身价
+    `xxx` int(11) NOT NULL, # 身价成长值
     `xxx` int(11) NOT NULL, # 需要的残章数量
     `xxx` int(11) NOT NULL, # 简介
     PRIMARY KEY (`xxx`)
