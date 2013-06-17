@@ -302,6 +302,43 @@ CREATE TABLE `xxx` (
     PRIMARY KEY (`xxx`)
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# ======================================================
+#
+# Source for table xxx (VIP原子表)
+#
+
+DROP TABLE IF EXISTS `xxx`;
+CREATE TABLE `xxx` (
+    `xxx` int(11) NOT NULL, # 记录ID
+    `xxx` int(11) NOT NULL, # VIP_ID
+    `xxx` int(11) NOT NULL, # VIP名称
+    `xxx` int(11) NOT NULL, # 万中选一甲之比例
+    `xxx` int(11) NOT NULL, # 万中选一乙之比例
+    `xxx` int(11) NOT NULL, # 百中选一甲之比例
+    `xxx` int(11) NOT NULL, # 百中选一乙之比例
+    `xxx` int(11) NOT NULL, # 百中选一丙之比例
+    `xxx` int(11) NOT NULL, # 十中选一乙之比例
+    `xxx` int(11) NOT NULL, # 十中选一丙之比例
+    `xxx` int(11) NOT NULL, # 十中选一丁之比例
+    `xxx` int(11) NOT NULL, # 箱子出甲兵器之比例
+    `xxx` int(11) NOT NULL, # 箱子出甲服装之比例
+    `xxx` int(11) NOT NULL, # 箱子出甲饰品之比例
+    `xxx` int(11) NOT NULL, # 箱子出甲武功之比例
+    `xxx` int(11) NOT NULL, # 箱子出乙兵器之比例
+    `xxx` int(11) NOT NULL, # 箱子出乙服装之比例
+    `xxx` int(11) NOT NULL, # 箱子出乙饰品之比例
+    `xxx` int(11) NOT NULL, # 箱子出乙武功之比例
+    `xxx` int(11) NOT NULL, # 箱子出丙兵器之比例
+    `xxx` int(11) NOT NULL, # 箱子出丙服装之比例
+    `xxx` int(11) NOT NULL, # 箱子出丙饰品之比例
+    `xxx` int(11) NOT NULL, # 箱子出丙武功之比例
+    `xxx` int(11) NOT NULL, # 箱子出丁兵器之比例
+    `xxx` int(11) NOT NULL, # 箱子出丁服装之比例
+    `xxx` int(11) NOT NULL, # 箱子出丁饰品之比例
+    `xxx` int(11) NOT NULL, # 箱子出丁武功之比例
+    PRIMARY KEY (`xxx`)
+)   ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
