@@ -28,13 +28,14 @@ DLBIN   = libadd.so libsub.so libmul.so libdiv.so
 BIN	    = test_so
 
 # where are include files kept
-INC	    = -I.
+INC	    = -I. -I./so
 
 # for Linker
 LINK    = -ldl
 
 # here, go to compiling
-all: clean $(BIN) $(DLBIN)
+#all: clean $(BIN) $(DLBIN)
+all: submake clean $(BIN)
 
 # how to compiling *.so
 libadd.so:$(ADDSRCS)
@@ -54,7 +55,11 @@ $(BIN):$(OBJS)
 %.o:%.c
 	$(CC)  $(CFLAGS) $(CDEBUG) $(BHFLAGS) $(CMACRO) $(INC) -o $@ -c $<
 
-.PHONY: clean
+.PHONY: submake
+submake:
+	-cd so && make
 
+.PHONY: clean
 clean:
-	-rm -rf $(OBJS) $(BIN) $(DLBIN) *~ *.o
+	-cd so && make clean
+	-rm -rf $(OBJS) $(BIN) *~ *.o
