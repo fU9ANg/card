@@ -35,7 +35,7 @@ LINK    = -ldl
 
 # here, go to compiling
 #all: clean $(BIN) $(DLBIN)
-all: submake clean $(BIN)
+all: clean submake $(BIN)
 
 # how to compiling *.so
 libadd.so:$(ADDSRCS)
