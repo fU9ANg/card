@@ -57,9 +57,9 @@ $(BIN):$(OBJS)
 
 .PHONY: submake
 submake:
-	-cd so && make
+	make -C so
 
 .PHONY: clean
 clean:
-	-cd so && make clean
+	make -C so clean
 	-rm -rf $(OBJS) $(BIN) *~ *.o
