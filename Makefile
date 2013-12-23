@@ -34,6 +34,7 @@ OBJS    = 	Card.o \
 		    Global.o \
 		    ThreadPool.o \
 		    Manager.o \
+            virtual.o \
 			handler/Message.o \
 			auth/Auth.o \
 			login/Login.o \

@@ -113,7 +113,9 @@ void EventLoop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
     }
 
     // check header of packet
-    int i = recv_v (w->fd, buf->ptr (), sizeof (int));
+    struct timeval tv;
+    tv.tv_usec = 1000;
+    int i = recv_n (w->fd, buf->ptr (), sizeof (int), &tv);
     if (sizeof (int) != i)
     {
         LOG (ERROR) << w->fd <<":recv head error! actually received len = "<< i 
@@ -125,7 +127,7 @@ void EventLoop::recv_cb (struct ev_loop *loop, ev_io *w, int revents)
 
     // recv body of packet
     int *p = (int*)buf->ptr ();
-    i = recv_v (w->fd, (char*)buf->ptr () + sizeof (int), *p - sizeof (unsigned int));
+    i = recv_n (w->fd, (char*)buf->ptr () + sizeof (int), *p - sizeof (unsigned int), &tv);
 
     if ((*p - sizeof (unsigned int)) != (unsigned int) i) 
     {
